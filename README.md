@@ -110,6 +110,7 @@ The forensic module records:
 - Investigation actions
 
 The collected information can be organized into an evidence report to help investigators review and document the investigation process.
+
 ## 🔄 Investigation Workflow
 
 MailAuth follows a structured investigation workflow to analyze suspicious emails and organize the collected evidence.
@@ -137,6 +138,7 @@ flowchart TD
 
     L --> M["🔐 Forensic Evidence"]
     M --> N["📄 Evidence Report"]
+```
 
 ##🏗️ System Architecture
 
