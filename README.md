@@ -288,5 +288,26 @@ The system then provides an investigation progress view and a threat/risk assess
 
 ![Evidence-report](./Prototype-interface.jpg/evidence-report.jpeg)
 
+## 📌 Project Status
 
+### Currently Demonstrated
 
+- Email threat investigation interface
+- Email threat detection workflow
+- Header analysis interface
+- SPF / DKIM / DMARC analysis workflow
+- IP and GeoLocation visualization
+- Attribution and indicator correlation workflow
+- Investigation dashboard
+- Forensic evidence tracking
+- Evidence report workflow
+
+### Planned Backend Integration
+
+- Real email parsing
+- Automated SPF / DKIM / DMARC verification
+- URL and attachment scanning
+- IP and domain threat intelligence
+- Automated risk scoring
+- Evidence report generation
+- Persistent investigation storage
