@@ -274,8 +274,20 @@ MailAuth can be extended with additional capabilities to improve automated email
 - Suspicious indicators
 The system then provides an investigation progress view and a threat/risk assessment based on the available signals.
 
-## Prototype Interface
-![MailAuth Prototype](./
-Prototype%20Interface.jpg)
+## 🖥️ Prototype Interface
+
+
+![Detection](./prototype-interface/Detection.jpeg)
+
+![Header Analysis](./prototype-interface/Header-analysis.jpeg)
+
+![GeoLocation](./prototype-interface/Geolocation.jpeg)
+
+![Attribution](./prototype-interface/Attribution.jpeg)
+
+![Forensic Chain](./prototype-interface/Forensic-chain.jpeg)
+
+![Evidence-report](./prototype-interface/Evidence-report.jpeg)
+
 
 
