@@ -276,17 +276,17 @@ The system then provides an investigation progress view and a threat/risk assess
 
 ## 🖥️ Prototype Interface
 
-![Detection](./prototype-interface/Detection.jpeg)
+![Detection](./Prototype-interface/detection.jpeg)
 
-![Header-Analysis](./prototype-interface/Header-Analysis.jpeg)
+![Header-Analysis](./Prototype-interface/header-Analysis.jpeg)
 
-![GeoLocation](./prototype-interface/Geolocation.jpeg)
+![GeoLocation](./Prototype-interface/geolocation.jpeg)
 
-![Attribution](./prototype-interface/Attribution.jpeg)
+![Attribution](./Prototype-interface/attribution.jpeg)
 
-![Forensic-chain](./prototype-interface/Forensic-chain.jpeg)
+![Forensic-chain](./Prototype-interface/forensic-chain.jpeg)
 
-![Evidence-report](./prototype-interface/Evidence-report.jpeg)
+![Evidence-report](./Prototype-interface/evidence-report.jpeg)
 
 
 
