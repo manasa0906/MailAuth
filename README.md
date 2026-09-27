@@ -272,5 +272,10 @@ MailAuth can be extended with additional capabilities to improve automated email
 - 🔔 Real-time threat alerts
 - 👥 Multi-user investigator and case management
 - Suspicious indicators
-
 The system then provides an investigation progress view and a threat/risk assessment based on the available signals.
+
+## Prototype Interface
+![MailAuth Prototype]
+(Prototype%20Interface.jpg)
+
+
