@@ -275,7 +275,7 @@ MailAuth can be extended with additional capabilities to improve automated email
 The system then provides an investigation progress view and a threat/risk assessment based on the available signals.
 
 ## Prototype Interface
-![MailAuth Prototype]
-(Prototype%20Interface.jpg)
+![MailAuth Prototype](./
+Prototype%20Interface.jpg)
 
 
