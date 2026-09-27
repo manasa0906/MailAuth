@@ -166,7 +166,7 @@ flowchart LR
 
     DASH --> FORENSIC["Forensic Chain"]
     FORENSIC --> REPORT["Evidence Report"]
-
+```
 > The forensic chain is designed to support evidence traceability and maintain a clear investigation history.
 
 ##Technology Stack
