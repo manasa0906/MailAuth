@@ -1,1 +1,114 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MailAuth — Email Threat Detection</title>
+<style>
+:root{--bg:#0a1120;--panel:#111b2e;--panel2:#0d1626;--border:#22314d;--text:#e7edf7;--muted:#8a99b8;--cyan:#38bdf8;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
+body{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+.app{display:flex;height:100%}
+.sidebar{width:230px;flex:none;background:var(--panel2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.brand .icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),#0e7490);display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand b{font-size:15px}
+.brand small{display:block;color:var(--muted);font-size:10px}
+.nav{display:flex;flex-direction:column;gap:2px;flex:1}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;background:none;border:none;color:var(--muted);border-radius:10px;cursor:pointer;font-size:13.5px;text-align:left;width:100%}
+.nav button:hover{background:#16223a;color:var(--text)}
+.nav button.active{background:#0e2338;color:var(--cyan);font-weight:600}
+.nav .bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:8px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--panel2)}
+.topbar input{flex:1;max-width:340px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:13px}
+.topbar .spacer{flex:1}
+.pill{padding:6px 10px;border-radius:20px;background:var(--panel);border:1px solid var(--border);font-size:12px;color:var(--muted)}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#334155,#1e293b);display:flex;align-items:center;justify-content:center;font-size:12px}
+.content{flex:1;overflow-y:auto;padding:24px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.field{margin-bottom:12px}
+input.f,textarea{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:13px}
+textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospace}
+.btn{background:var(--cyan);color:#04202b;border:none;padding:10px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer}
+.btn.ghost{background:none;border:1px solid var(--border);color:var(--text)}
+.btn.sm{padding:7px 12px;font-size:12px}
+@media(max-width:900px){.app{flex-direction:column}.sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:10px}.nav{flex-direction:row}.nav .bottom{margin:0 0 0 auto;border:none;display:flex}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><div class="icon">🛡️</div><div><b>MAILAUTH</b><small>Investigate. Authenticate. Trace.</small></div></div>
+    <div class="nav">
+      <button>📊 Overview</button>
+      <button class="active">🔍 Detection</button>
+      <button>📧 Header Analysis</button>
+      <button>🌐 GeoLocation</button>
+      <button>🕸️ Attribution</button>
+      <button>⛓️ Forensic Chain</button>
+      <div class="bottom">
+        <button>⚙️ Settings</button>
+        <button>❓ Help</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <b>MailAuth</b>
+      <input placeholder="Search investigations, IOCs, domains...">
+      <div class="spacer"></div>
+      <div class="pill">Demo Mode: Off</div>
+      <div class="pill">🔔 3</div>
+      <div class="avatar">AN</div>
+    </div>
+    <div class="content">
+      <h1>Email Threat Detection</h1>
+      <p class="sub">Paste raw email content or headers to run a full forensic investigation.</p>
+      <div class="grid2">
+        <div class="card">
+          <div class="field"><label>Sender</label><input class="f" id="f-sender" placeholder="sender@example.com"></div>
+          <div class="field"><label>Recipient</label><input class="f" id="f-recipient" placeholder="you@company.com"></div>
+          <div class="field"><label>Subject</label><input class="f" id="f-subject" placeholder="Email subject"></div>
+          <div class="field"><label>Detected URL</label><input class="f" id="f-url" placeholder="https://..."></div>
+          <div class="field"><label>Attachment</label><input class="f" id="f-attach" placeholder="None"></div>
+        </div>
+        <div class="card">
+          <label>Email Body</label>
+          <textarea id="f-body" placeholder="Paste email content here..."></textarea>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <button class="btn ghost sm" onclick="loadSample('phish')">Load Sample Email</button>
+            <button class="btn ghost sm" onclick="loadSample('safe')">Load Safe Example</button>
+            <button class="btn ghost sm" onclick="clearForm()">Clear</button>
+          </div>
+          <button class="btn" style="margin-top:12px" onclick="analyzeEmail()">Analyze Email</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const samples={
+  phish:{sender:'security-update@paypaI-support.com',recipient:'you@company.com',subject:'Urgent: Your account requires verification',url:'https://paypaI-support.com/verify',attach:'None',body:'Your account requires immediate verification.\nFailure to verify your account may result in temporary restriction.\n\nVerify your account:\nhttps://paypaI-support.com/verify'},
+  safe:{sender:'billing@stripe.com',recipient:'you@company.com',subject:'Your October invoice is ready',url:'https://dashboard.stripe.com/invoices',attach:'invoice.pdf',body:'Hi, your October invoice is now available in your dashboard. No action is required.'}
+};
+function f(id){return document.getElementById(id)}
+function loadSample(type){
+  const s=samples[type];
+  f('f-sender').value=s.sender; f('f-recipient').value=s.recipient; f('f-subject').value=s.subject;
+  f('f-url').value=s.url; f('f-attach').value=s.attach; f('f-body').value=s.body;
+}
+function clearForm(){
+  ['f-sender','f-recipient','f-subject','f-url','f-attach','f-body'].forEach(id=>f(id).value='');
+}
+function analyzeEmail(){
+  alert('Analysis would run here — connect this button to the Detection module logic (see the full MailAuth app) to see the risk score and investigation animation.');
+}
+</script>
+</body>
+</html>
