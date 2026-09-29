@@ -109,7 +109,15 @@ function clearForm(){
   ['f-sender','f-recipient','f-subject','f-url','f-attach','f-body'].forEach(id=>f(id).value='');
 }
 function analyzeEmail(){
-  alert('Analysis would run here — connect this button to the Detection module logic (see the full MailAuth app) to see the risk score and investigation animation.');
+
+  const result = document.getElementById("investigationResult");
+
+  result.style.display = "block";
+
+  result.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
 }
 </script>
 </body>
