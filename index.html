@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MailAuth — Threat Intelligence Overview</title>
+<style>
+:root{--bg:#0a1120;--panel:#111b2e;--panel2:#0d1626;--border:#22314d;--text:#e7edf7;--muted:#8a99b8;--cyan:#38bdf8;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
+body{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+.app{display:flex;height:100%}
+.sidebar{width:230px;flex:none;background:var(--panel2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.brand .icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),#0e7490);display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand b{font-size:15px}
+.brand small{display:block;color:var(--muted);font-size:10px}
+.nav{display:flex;flex-direction:column;gap:2px;flex:1}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;background:none;border:none;color:var(--muted);border-radius:10px;cursor:pointer;font-size:13.5px;text-align:left;width:100%}
+.nav button:hover{background:#16223a;color:var(--text)}
+.nav button.active{background:#0e2338;color:var(--cyan);font-weight:600}
+.nav .bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:8px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;gap:16px;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--panel2)}
+.topbar input{flex:1;max-width:340px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:var(--text);font-size:13px}
+.topbar .spacer{flex:1}
+.pill{padding:6px 10px;border-radius:20px;background:var(--panel);border:1px solid var(--border);font-size:12px;color:var(--muted)}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#334155,#1e293b);display:flex;align-items:center;justify-content:center;font-size:12px}
+.content{flex:1;overflow-y:auto;padding:24px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 20px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px}
+.stat b{font-size:24px;display:block}
+.stat span{color:var(--muted);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase}
+.badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.b-high{background:#3a1414;color:var(--red)}
+.b-med{background:#3a2c0f;color:var(--amber)}
+.b-low{background:#123322;color:var(--green)}
+.btn{background:var(--cyan);color:#04202b;border:none;padding:10px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer}
+.btn.ghost{background:none;border:1px solid var(--border);color:var(--text)}
+.btn.sm{padding:7px 12px;font-size:12px}
+@media(max-width:900px){.app{flex-direction:column}.sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:10px}.nav{flex-direction:row}.nav .bottom{margin:0 0 0 auto;border:none;display:flex}.grid4{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><div class="icon">🛡️</div><div><b>MAILAUTH</b><small>Investigate. Authenticate. Trace.</small></div></div>
+    <div class="nav">
+      <button class="active">📊 Overview</button>
+      <button>🔍 Detection</button>
+      <button>📧 Header Analysis</button>
+      <button>🌐 GeoLocation</button>
+      <button>🕸️ Attribution</button>
+      <button>⛓️ Forensic Chain</button>
+      <div class="bottom">
+        <button>⚙️ Settings</button>
+        <button>❓ Help</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <b>MailAuth</b>
+      <input placeholder="Search investigations, IOCs, domains...">
+      <div class="spacer"></div>
+      <div class="pill">Demo Mode: Off</div>
+      <div class="pill">🔔 3</div>
+      <div class="avatar">AN</div>
+    </div>
+    <div class="content">
+      <h1>Threat Intelligence Overview</h1>
+      <p class="sub">Monitor, investigate and trace suspicious email activity.</p>
+      <div class="grid4">
+        <div class="card stat"><b>4,812</b><span>Emails Analyzed</span></div>
+        <div class="card stat"><b style="color:var(--red)">318</b><span>Threats Detected</span></div>
+        <div class="card stat"><b style="color:var(--amber)">92</b><span>High Risk Emails</span></div>
+        <div class="card stat"><b>47</b><span>Active Investigations</span></div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <b>Run a live demo</b><p class="sub" style="margin:4px 0 12px">Load a suspicious sample and walk through the full investigation pipeline.</p>
+        <button class="btn">▶ Run Full Demo</button>
+      </div>
+      <div class="card">
+        <b>Recent Alerts</b>
+        <table style="margin-top:10px"><thead><tr><th>Email</th><th>Threat Type</th><th>Risk Score</th><th>Status</th><th>Time</th><th>Action</th></tr></thead>
+        <tbody>
+        <tr><td>security-update@paypaI-support.com</td><td>Credential Phishing</td><td>92/100</td><td><span class="badge b-high">High Risk</span></td><td>09:12</td><td><button class="btn ghost sm">Review</button></td></tr>
+        <tr><td>invoices@vendor-billing-team.net</td><td>Business Email Compromise</td><td>76/100</td><td><span class="badge b-med">Suspicious</span></td><td>08:47</td><td><button class="btn ghost sm">Review</button></td></tr>
+        <tr><td>notifications@company-hr-portal.com</td><td>Credential Harvest</td><td>21/100</td><td><span class="badge b-low">Low Risk</span></td><td>Yesterday</td><td><button class="btn ghost sm">Review</button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
