@@ -49,22 +49,63 @@ th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase}
 <body>
 <div class="app">
   <div class="sidebar">
-    <div class="brand"><div class="icon">🛡️</div><div><b>MAILAUTH</b><small>Investigate. Authenticate. Trace.</small></div></div>
-    <div class="nav">
-      <button class="active">📊 Overview</button>
-    <button onclick="window.location.href='detection.html'">
-    🔍 Detection
-</button>
-      <button>📧 Header Analysis</button>
-      <button>🌐 GeoLocation</button>
-      <button>🕸️ Attribution</button>
-      <button>⛓️ Forensic Chain</button>
-      <div class="bottom">
-        <button>⚙️ Settings</button>
-        <button>❓ Help</button>
-      </div>
+
+  <div class="brand">
+    <div class="icon">🛡️</div>
+
+    <div>
+      <b>MAILAUTH</b>
+      <small>Investigate. Authenticate. Trace.</small>
     </div>
   </div>
+
+  <div class="nav">
+
+    <!-- Overview -->
+    <button class="active" onclick="window.location.href='index.html'">
+      📊 Overview
+    </button>
+
+    <!-- Detection -->
+    <button onclick="window.location.href='detection.html'">
+      🔍 Detection
+    </button>
+
+    <!-- Header Analysis -->
+    <button onclick="window.location.href='header-analysis.html'">
+      📧 Header Analysis
+    </button>
+
+    <!-- GeoLocation -->
+    <button onclick="window.location.href='geolocation.html'">
+      🌐 GeoLocation
+    </button>
+
+    <!-- Attribution -->
+    <button onclick="window.location.href='attribution.html'">
+      🕸️ Attribution
+    </button>
+
+    <!-- Forensic Chain -->
+    <button onclick="window.location.href='forensic.html'">
+      ⛓️ Forensic Chain
+    </button>
+
+    <div class="bottom">
+
+      <button>
+        ⚙️ Settings
+      </button>
+
+      <button>
+        ❓ Help
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
   <div class="main">
     <div class="topbar">
       <b>MailAuth</b>
