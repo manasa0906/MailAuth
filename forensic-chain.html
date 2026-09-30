@@ -4,261 +4,101 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MailAuth – Forensic Chain</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #070b16; --panel: #0b1120; --sidebar: #0a0f1c; --border: #1a2338;
-    --text: #e6ebf5; --muted: #7d8bad; --teal: #22b8cf; --teal-bg: #0d2a33;
-    --sans: "Inter", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
-  }
-  * { box-sizing: border-box; margin: 0; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
-  .app { display: grid; grid-template-columns: 210px 1fr; min-height: 100vh; }
+:root {
+  --bg: #070b16;
+  --panel: #0b1120;
+  --sidebar: #0a0f1c;
+  --border: #1a2338;
+  --text: #e6ebf5;
+  --muted: #7d8bad;
+  --teal: #22b8cf;
+  --teal-bg: #0d2a33;
+  --sans: "Inter", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
 
-  /* Sidebar */
-  .sidebar { background: var(--sidebar); border-right: 1px solid var(--border); padding: 28px 10px 20px; display: flex; flex-direction: column; }
-  .brand { display: flex; gap: 10px; align-items: center; padding: 0 8px 26px; }
-  .brand-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--teal-bg); border: 1px solid var(--teal); display: grid; place-items: center; color: var(--teal); flex: none; }
-  .brand b { font-size: 15px; display: block; }
-  .brand small { color: var(--muted); font-size: 10px; line-height: 1.2; display: block; }
-  .sidebar a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; color: var(--muted); text-decoration: none; border: 1px solid transparent; }
-  .sidebar a:hover { color: var(--text); }
-  .sidebar a.active { background: var(--teal-bg); border-color: #1d4a57; color: var(--text); }
-  .sidebar svg { width: 16px; height: 16px; flex: none; }
-  .foot { margin-top: auto; }
-  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
 
-  /* Top bar */
-  .topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px 0 22px; gap: 16px; }
-  .search { position: relative; width: min(280px, 100%); }
-  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 14px; color: var(--muted); }
-  .search input { width: 100%; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 12px 9px 34px; font: inherit; }
-  .search input::placeholder { color: var(--muted); }
-  .top-right { display: flex; align-items: center; gap: 22px; color: var(--muted); }
-  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #04222a; font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+}
 
-  /* Content */
-  main { padding: 28px 28px 40px 30px; }
-  h1 { font-size: 22px; font-weight: 700; }
-  .sub { color: var(--muted); margin: 6px 0 22px; }
-  .grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 14px; align-items: start; }
-  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-  .card h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.app {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  min-height: 100vh;
+}
 
-  /* Timeline */
-  .timeline { list-style: none; padding: 0; position: relative; }
-  .timeline::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 6px; width: 2px; background: #1c2a40; }
-  .timeline li { position: relative; padding: 0 0 18px 22px; }
-  .timeline li::before { content: ""; position: absolute; left: 0; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: #29c5e6; }
-  .timeline time { display: block; font-size: 12px; color: var(--muted); }
-  .timeline span { font-weight: 500; }
+/* =========================
+   SIDEBAR
+========================= */
 
-  /* Evidence */
-  .evidence { display: grid; gap: 10px; }
-  .ev { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: #0a1020; }
-  .ev h3 { color: var(--teal); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-  .ev p { font-size: 13px; margin-bottom: 2px; }
-  .ev code { display: block; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  padding: 28px 10px 20px;
+  display: flex;
+  flex-direction: column;
+}
 
-  .btn { font: inherit; font-weight: 600; border-radius: 8px; padding: 10px 16px; cursor: pointer; border: 1px solid var(--border); }
-  .btn-primary { background: #29c5e6; border-color: #29c5e6; color: #04222a; }
-  .btn-primary:hover { background: #4fd3ef; }
-  .btn-ghost { background: #0a1020; color: var(--text); }
-  .btn-ghost:hover { border-color: #2a3a58; }
-  #generate { margin-top: 18px; }
+/* MailAuth Logo */
 
-  /* Modal */
-  .overlay { position: fixed; inset: 0; background: rgba(2, 5, 12, .72); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
-  .overlay.open { display: flex; }
-  .modal { width: min(640px, 100%); max-height: 100%; overflow-y: auto; background: #10182b; border: 1px solid #25304a; border-radius: 14px; padding: 26px 30px; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
-  .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
-  .report { width: 100%; border-collapse: collapse; }
-  .report th, .report td { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
-  .report th { text-align: left; font-weight: 400; }
-  .report td { text-align: right; }
-  .report td.mono { font-family: var(--mono); font-size: 13px; }
-  .disclaimer { font-size: 12px; color: var(--muted); margin: 16px 0 18px; line-height: 1.5; }
-  .actions { display: flex; gap: 10px; }
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 0 8px 26px;
+}
 
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
-  @media (max-width: 720px) {
-    .app { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    main { padding: 20px 16px 32px; }
-    .modal { padding: 20px; }
-  }
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--teal-bg);
+  border: 1px solid var(--teal);
+  display: grid;
+  place-items: center;
+  color: var(--teal);
+  flex: none;
+}
 
-  /* Print only the report */
-  @media print {
-    body * { visibility: hidden; }
-    .overlay, .overlay * { visibility: visible; }
-    .overlay { position: absolute; inset: 0; background: #fff; display: block; padding: 0; }
-    .modal { background: #fff; color: #000; border: 0; box-shadow: none; }
-    .report th, .report td, .disclaimer { color: #000; border-color: #ccc; }
-    .actions { display: none; }
-  }
-</style>
-</head>
-<body>
-<div class="app">
+.brand-icon svg {
+  width: 17px;
+  height: 17px;
+}
 
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-      </div>
-      <div><b>MailAuth</b><small>Investigate · Authenticate · Trace</small></div>
-    </div>
-    <nav aria-label="Main">
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Detection</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Header Analysis</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>GeoLocation</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.5 8l3.5 8M16.5 8 13 16"/></svg>Attribution</a>
-      <a href="#" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="6" rx="1"/><rect x="4" y="11" width="16" height="6" rx="1"/><path d="M4 21h16"/></svg>Forensic Chain</a>
-    </nav>
-    <div class="foot">
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Settings</a>
-      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg>Help</a>
-    </div>
-  </aside>
+.brand b {
+  font-size: 15px;
+  display: block;
+}
 
-  <div>
-    <header class="topbar">
-      <label class="search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="search" placeholder="Search investigations, domains, IPs..." aria-label="Search">
-      </label>
-      <div class="top-right">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="Notifications"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9ZM13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        <div class="avatar">SA</div>
-      </div>
-    </header>
+.brand small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.2;
+  display: block;
+}
 
-    <main>
-      <h1>Evidence &amp; Forensic Chain</h1>
-      <p class="sub">Chronological, hash-linked record of this investigation.</p>
+/* Navigation */
 
-      <div class="grid">
-        <section class="card">
-          <h2>Investigation Timeline</h2>
-          <ol class="timeline" id="timeline"></ol>
-        </section>
-        <section class="card">
-          <h2>Evidence Chain</h2>
-          <div class="evidence" id="evidence"></div>
-        </section>
-      </div>
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+}
 
-      <button class="btn btn-primary" id="generate" type="button">Generate Evidence Report</button>
-    </main>
-  </div>
-</div>
-
-<!-- Report modal -->
-<div class="overlay" id="overlay">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="report-title">
-    <h2 id="report-title">MAILAUTH — Email Threat Investigation Report</h2>
-    <table class="report"><tbody id="report-rows"></tbody></table>
-    <p class="disclaimer">Generated by MailAuth — Email Threat Intelligence Platform. All findings in this prototype are simulated for demonstration purposes.</p>
-    <div class="actions">
-      <button class="btn btn-primary" id="print" type="button">Print Report</button>
-      <button class="btn btn-ghost" id="close" type="button">Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  const timeline = [
-    ["12:41:02", "Email submitted for analysis"],
-    ["12:41:04", "Header extracted"],
-    ["12:41:06", "SPF / DKIM / DMARC analyzed"],
-    ["12:41:08", "URL indicators extracted"],
-    ["12:41:10", "Threat score generated"],
-    ["12:41:12", "Evidence record created"],
-  ];
-
-  const evidence = [
-    { label: "Email submitted",        hash: "ab8fc2aec2b1dc76", prev: "0000000000000000" },
-    { label: "Header extracted",       hash: "6c5af5775b7cbfaf", prev: "ab8fc2aec2b1dc76" },
-    { label: "SPF/DKIM/DMARC analyzed", hash: "fe1cffdbd2529e7a", prev: "6c5af5775b7cbfaf" },
-    { label: "Threat score generated", hash: "d04dcdf1a9a98e77", prev: "fe1cffdbd2529e7a" },
-  ];
-
-  const investigation = {
-    id: "INV-20940",
-    risk: "92/100 — HIGH RISK",
-    classification: "Credential Phishing",
-    sender: "security-update@paypal-support.com",
-    auth: "FAIL / FAIL / FAIL",
-    urls: "1",
-    origin: "185.212.44.91 — Singapore (approx.)",
-    attribution: "Linked to CAM-001 (12 related emails)",
-  };
-
-  const el = (tag, cls, text) => {
-    const n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (text !== undefined) n.textContent = text;
-    return n;
-  };
-
-  // Timeline
-  const tl = document.getElementById("timeline");
-  timeline.forEach(([time, label]) => {
-    const li = el("li");
-    li.append(el("time", "", time), el("span", "", label));
-    tl.append(li);
-  });
-
-  // Evidence chain
-  const ev = document.getElementById("evidence");
-  evidence.forEach((e, i) => {
-    const card = el("div", "ev");
-    card.append(
-      el("h3", "", `Evidence #${String(i + 1).padStart(3, "0")}`),
-      el("p", "", e.label),
-      el("code", "", `Hash: ${e.hash}`),
-      el("code", "", `Prev: ${e.prev}`)
-    );
-    ev.append(card);
-  });
-
-  // Report modal
-  const overlay = document.getElementById("overlay");
-  const generateBtn = document.getElementById("generate");
-  const closeBtn = document.getElementById("close");
-
-  function buildReport() {
-    const rows = [
-      ["Investigation ID", investigation.id, true],
-      ["Date / Time", new Date().toLocaleString("en-US"), false],
-      ["Risk Score", investigation.risk, false],
-      ["Threat Classification", investigation.classification, false],
-      ["Sender", investigation.sender, true],
-      ["SPF / DKIM / DMARC", investigation.auth, false],
-      ["Suspicious URLs", investigation.urls, false],
-      ["Origin", investigation.origin, false],
-      ["Attribution", investigation.attribution, false],
-      ["Evidence Blocks", `${evidence.length} (chained, hash-verified)`, false],
-    ];
-    const body = document.getElementById("report-rows");
-    body.replaceChildren();
-    rows.forEach(([k, v, mono]) => {
-      const tr = el("tr");
-      tr.append(el("th", "", k), el("td", mono ? "mono" : "", v));
-      body.append(tr);
-    });
-  }
-
-  function openReport() { buildReport(); overlay.classList.add("open"); closeBtn.focus(); }
-  function closeReport() { overlay.classList.remove("open"); generateBtn.focus(); }
-
-  generateBtn.addEventListener("click", openReport);
-  closeBtn.addEventListener("click", closeReport);
-  document.getElementById("print").addEventListener("click", () => window.print());
-  overlay.addEventListener("click", e => { if (e.target === overlay) closeReport(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && overlay.classList.contains("open")) closeReport(); });
-</script>
-</body>
-</html>
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom:
