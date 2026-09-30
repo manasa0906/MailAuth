@@ -61,7 +61,7 @@ textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospa
     <div class="nav">
       <button>📊 Overview</button>
       <button class="active">🔍 Detection</button>
-      <button>📧 Header Analysis</button>
+      <button onclick="showHeaderAnalysis()">View Header Analysis</button>
       <button>🌐 GeoLocation</button>
       <button>🕸️ Attribution</button>
       <button>⛓️ Forensic Chain</button>
@@ -119,7 +119,7 @@ textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospa
         <h3 style="margin-top:20px">Why was this email flagged?</h3>
         <div id="factorsList"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-          <button class="btn ghost sm">View Header Analysis</button>
+         <button class="btn ghost sm" onclick="showHeaderAnalysis()">View Header Analysis</button>
           <button class="btn ghost sm">View GeoLocation</button>
           <button class="btn ghost sm">View Attribution</button>
           <button class="btn ghost sm">View Evidence Chain</button>
@@ -178,4 +178,9 @@ function analyzeEmail(){
 }
 </script>
 </body>
+<script>
+function showHeaderAnalysis() {
+    window.location.href = "header-analysis.html";
+}
+</script>
 </html>
