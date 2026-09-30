@@ -62,7 +62,9 @@ textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospa
       <button>📊 Overview</button>
       <button class="active">🔍 Detection</button>
       <button onclick="showHeaderAnalysis()">View Header Analysis</button>
-      <button>🌐 GeoLocation</button>
+      <button onclick="window.location.href='geolocation.html'">
+  📍 GeoLocation
+</button>
       <button>🕸️ Attribution</button>
       <button>⛓️ Forensic Chain</button>
       <div class="bottom">
@@ -120,7 +122,9 @@ textarea{min-height:120px;resize:vertical;font-family:ui-monospace,Menlo,monospa
         <div id="factorsList"></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
          <button class="btn ghost sm" onclick="showHeaderAnalysis()">View Header Analysis</button>
-          <button class="btn ghost sm">View GeoLocation</button>
+          <button class="btn ghost" onclick="window.location.href='geolocation.html'">
+  View GeoLocation
+</button>
           <button class="btn ghost sm">View Attribution</button>
           <button class="btn ghost sm">View Evidence Chain</button>
           <button class="btn ghost sm">Generate Evidence Report</button>
