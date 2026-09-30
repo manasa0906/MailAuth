@@ -47,22 +47,57 @@ h1{font-size:22px;margin:0 0 4px}
 <body>
 <div class="app">
   <div class="sidebar">
-    <div class="brand"><div class="icon">✉️</div><div><b>MailAuth</b><small>Investigate · Authenticate · Trace</small></div></div>
-    <div class="nav">
-      <button>▦ Overview</button>
-      <button>🔍 Detection</button>
-      <button>▤ Header Analysis</button>
-      <button class="active" onclick="window.location.href='geolocation.html'">
-  📍 GeoLocation
-</button>
-      <button>🕸️ Attribution</button>
-      <button>☰ Forensic Chain</button>
-      <div class="bottom">
-        <button>⚙ Settings</button>
-        <button>? Help</button>
-      </div>
+
+  <div class="brand">
+    <div class="icon">🛡️</div>
+
+    <div>
+      <b>MAILAUTH</b>
+      <small>Investigate. Authenticate. Trace.</small>
     </div>
   </div>
+
+  <div class="nav">
+
+    <button onclick="window.location.href='index.html'">
+      📊 Overview
+    </button>
+
+    <button onclick="window.location.href='detection.html'">
+      🔍 Detection
+    </button>
+
+    <button onclick="window.location.href='header-analysis.html'">
+      📧 Header Analysis
+    </button>
+
+    <button class="active" onclick="window.location.href='geolocation.html'">
+      🌐 GeoLocation
+    </button>
+
+    <button onclick="window.location.href='attribution.html'">
+      🕸️ Attribution
+    </button>
+
+    <button onclick="window.location.href='forensic.html'">
+      ⛓️ Forensic Chain
+    </button>
+
+    <div class="bottom">
+
+      <button>
+        ⚙️ Settings
+      </button>
+
+      <button>
+        ❓ Help
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
   <div class="main">
     <div class="topbar">
       <input placeholder="Search investigations, domains, IPs...">
