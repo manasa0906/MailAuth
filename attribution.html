@@ -1,1 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MailAuth – Attribution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070b16;
+    --panel: #0b1120;
+    --sidebar: #0a0f1c;
+    --border: #1a2338;
+    --text: #e6ebf5;
+    --muted: #7d8bad;
+    --teal: #22b8cf;
+    --teal-bg: #0d2a33;
+    --red: #ff6b6b;
+    --red-bg: #3a1519;
+    --amber: #f5b301;
+    --amber-bg: #3a2c0a;
+    --sans: "Inter", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
 
+  .app { display: grid; grid-template-columns: 210px 1fr; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar { background: var(--sidebar); border-right: 1px solid var(--border); padding: 28px 10px 20px; display: flex; flex-direction: column; }
+  .brand { display: flex; gap: 10px; align-items: center; padding: 0 8px 26px; }
+  .brand-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--teal-bg); border: 1px solid var(--teal); display: grid; place-items: center; color: var(--teal); flex: none; }
+  .brand b { font-size: 15px; display: block; }
+  .brand small { color: var(--muted); font-size: 10px; line-height: 1.2; display: block; }
+  nav a, .foot a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 4px; border-radius: 8px; color: var(--muted); text-decoration: none; border: 1px solid transparent; }
+  nav a:hover, .foot a:hover { color: var(--text); }
+  nav a.active { background: var(--teal-bg); border-color: #1d4a57; color: var(--text); }
+  nav a:focus-visible, .foot a:focus-visible, input:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  nav svg, .foot svg { width: 16px; height: 16px; flex: none; }
+  .foot { margin-top: auto; }
+
+  /* Top bar */
+  .topbar { height: 56px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px 0 22px; gap: 16px; }
+  .search { position: relative; width: min(280px, 100%); }
+  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 14px; color: var(--muted); }
+  .search input { width: 100%; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 9px 12px 9px 34px; font: inherit; }
+  .search input::placeholder { color: var(--muted); }
+  .top-right { display: flex; align-items: center; gap: 22px; color: var(--muted); }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--teal); color: #04222a; font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+
+  /* Content */
+  main { padding: 28px 22px 40px 30px; max-width: 900px; }
+  h1 { font-size: 22px; font-weight: 700; }
+  .sub { color: var(--muted); margin: 6px 0 22px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+  .card h2 { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 640px; }
+  th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 6px 10px 10px; }
+  td { padding: 12px 10px; border-top: 1px solid var(--border); vertical-align: middle; }
+  td.mono { font-family: var(--mono); font-size: 13px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge.high { background: var(--red-bg); color: var(--red); }
+  .badge.medium { background: var(--amber-bg); color: var(--amber); }
+
+  /* Relationship chain */
+  .chain { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .node { background: #0a1426; border: 1px solid #25304a; border-radius: 999px; padding: 7px 14px; font-size: 13px; }
+  .node.mono { font-family: var(--mono); }
+  .node.end { border-color: var(--red); color: var(--red); background: #1b0f14; }
+  .arrow { color: var(--muted); }
+  .note { font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 720px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    main { padding: 20px 16px 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </div>
+      <div><b>MailAuth</b><small>Investigate · Authenticate · Trace</small></div>
+    </div>
+
+    <nav aria-label="Main">
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Overview</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Detection</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Header Analysis</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>GeoLocation</a>
+      <a href="#" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.5 8l3.5 8M16.5 8 13 16"/></svg>Attribution</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="6" rx="1"/><rect x="4" y="11" width="16" height="6" rx="1"/><path d="M4 21h16"/></svg>Forensic Chain</a>
+    </nav>
+
+    <div class="foot">
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>Settings</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg>Help</a>
+    </div>
+  </aside>
+
+  <div>
+    <header class="topbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" placeholder="Search investigations, domains, IPs..." aria-label="Search">
+      </label>
+      <div class="top-right">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="Notifications"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9ZM13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <div class="avatar">SA</div>
+      </div>
+    </header>
+
+    <main>
+      <h1>Attribution</h1>
+      <p class="sub">Identify whether suspicious emails share technical indicators across a campaign.</p>
+
+      <section class="card">
+        <h2>Campaign Grouping</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Campaign ID</th><th>Emails</th><th>Shared Domain</th><th>Shared IP</th><th>Common URLs</th><th>Risk</th><th>Status</th></tr>
+            </thead>
+            <tbody id="campaigns"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 id="chain-title"></h2>
+        <div class="chain" id="chain"></div>
+        <p class="note">Emails are grouped using shared observable signals. This does not establish the identity of the sender.</p>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+  const campaigns = [
+    { id: "CAM-001", emails: 12, domain: "paypal-support.com", ip: "185.212.44.91", urls: 3, risk: "High",   status: "Active" },
+    { id: "CAM-002", emails: 5,  domain: "supplier-billing-corp.net", ip: "91.203.15.44", urls: 2, risk: "Medium", status: "Monitoring" },
+    { id: "CAM-003", emails: 3,  domain: "internal-corp-mail.com", ip: "45.88.201.7", urls: 1, risk: "High",   status: "Active" },
+  ];
+
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  };
+
+  // Table rows (textContent is used so domain/IP data can't inject markup)
+  const tbody = document.getElementById("campaigns");
+  campaigns.forEach(c => {
+    const tr = el("tr");
+    tr.append(
+      el("td", "mono", c.id),
+      el("td", "", `${c.emails} emails`),
+      el("td", "mono", c.domain),
+      el("td", "mono", c.ip),
+      el("td", "", `${c.urls} URL${c.urls > 1 ? "s" : ""}`)
+    );
+    const risk = el("td"); risk.append(el("span", `badge ${c.risk.toLowerCase()}`, c.risk));
+    tr.append(risk, el("td", "", c.status));
+    tbody.append(tr);
+  });
+
+  // Relationship chain for the first campaign
+  const c = campaigns[0];
+  document.getElementById("chain-title").textContent = `Observable Relationship Chain — ${c.id}`;
+  const steps = [
+    ["Email", ""], [c.domain, "mono"], [c.ip, "mono"], [`${c.urls} URLs`, ""], [c.id, "end"],
+  ];
+  const chain = document.getElementById("chain");
+  steps.forEach(([label, cls], i) => {
+    if (i) chain.append(el("span", "arrow", "→"));
+    chain.append(el("span", `node ${cls}`, label));
+  });
+</script>
+</body>
+</html>
