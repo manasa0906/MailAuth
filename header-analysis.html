@@ -30,39 +30,24 @@ h1{font-size:22px;margin:0 0 4px}
 .sub{color:var(--muted);font-size:13.5px;margin:0 0 20px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
-  .btn{
-  background:var(--cyan);
-  color:#04202b;
-  border:none;
-  padding:10px 16px;
-  border-radius:10px;
-  font-weight:600;
-  font-size:13px;
-  cursor:pointer
-}
-
-.btn.ghost{
-  background:none;
-  border:1px solid var(--border);
-  color:var(--text)
-}
-
-.btn.sm{
-  padding:7px 12px;
-  font-size:12px
-}
+.btn{background:var(--cyan);color:#04202b;border:none;padding:10px 16px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer}
+.btn.ghost{background:none;border:1px solid var(--border);color:var(--text)}
+.btn.ghost.selected{border-color:var(--cyan);color:var(--cyan)}
+.btn.sm{padding:7px 12px;font-size:12px}
 .card b.title{display:block;font-size:15px;margin-bottom:12px}
 .authrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;font-size:14px}
 .badge{padding:4px 12px;border-radius:6px;font-size:11.5px;font-weight:700}
 .b-fail{background:#3a1414;color:var(--red)}
-.b-warn{background:#3a2c0f;color:var(--amber)}
+.b-pass{background:#0f2e1a;color:var(--green)}
 .warn{background:#2a1f0a;border:1px solid #5a4212;color:#f4c95d;padding:12px 14px;border-radius:10px;font-size:12.5px;margin-top:10px}
+.warn.ok{background:#0c2416;border-color:#1c5a35;color:#7ee2a2}
 .metarow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:13px}
-.metarow .k{color:var(--muted)}
-.metarow .v{font-family:ui-monospace,Menlo,monospace;text-align:right}
+.metarow .k{color:var(--muted);flex:none}
+.metarow .v{font-family:ui-monospace,Menlo,monospace;text-align:right;overflow-wrap:anywhere}
 .relay{display:flex;flex-direction:column;gap:2px;margin-top:8px}
 .relaynode{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:13.5px}
 .relaynode.bad{border-color:var(--red);background:#2a1414}
+.relaynode.good{border-color:var(--green);background:#0c2416}
 .relaynode .mono{font-family:ui-monospace,Menlo,monospace;color:var(--muted)}
 .arrow{color:var(--muted);font-size:14px;padding-left:16px}
 @media(max-width:900px){.app{flex-direction:column}.sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:10px}.nav{flex-direction:row}.nav .bottom{margin:0 0 0 auto;padding:0;display:flex}.grid2{grid-template-columns:1fr}}
@@ -74,9 +59,7 @@ h1{font-size:22px;margin:0 0 4px}
     <div class="brand"><div class="icon">✉️</div><div><b>MailAuth</b><small>Investigate · Authenticate · Trace</small></div></div>
     <div class="nav">
       <button>▦ Overview</button>
-     <button onclick="window.location.href='detection.html'">
-    🔍 Detection
-</button>
+      <button onclick="window.location.href='detection.html'">🔍 Detection</button>
       <button class="active">▤ Header Analysis</button>
       <button>📍 GeoLocation</button>
       <button>🕸️ Attribution</button>
@@ -96,60 +79,137 @@ h1{font-size:22px;margin:0 0 4px}
     </div>
     <div class="content">
       <h1>Header Analysis</h1>
-      <p class="sub">Authentication results and relay path for the current investigation.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-  <button class="btn ghost sm" onclick="loadHeaderSample('phish')">
-    Load Sample Email
-  </button>
+      <p class="sub">Authentication results and relay path for the current investigation. Header values are simulated from the email you analyzed.</p>
 
-  <button class="btn ghost sm" onclick="loadHeaderSample('safe')">
-    Load Safe Example
-  </button>
-</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <button id="btn-phish" class="btn ghost sm" onclick="loadHeaderSample('phish')">Load Sample Email</button>
+        <button id="btn-safe" class="btn ghost sm" onclick="loadHeaderSample('safe')">Load Safe Example</button>
+      </div>
 
       <div class="grid2">
         <div class="card">
           <b class="title">Authentication Results</b>
-          <div class="authrow"><span>SPF</span><span class="badge b-fail">FAIL</span></div>
-          <div class="authrow"><span>DKIM</span><span class="badge b-fail">FAIL</span></div>
-          <div class="authrow"><span>DMARC</span><span class="badge b-warn">FAIL</span></div>
-          <div class="warn">Authentication Summary: SPF failed because the sending IP is not authorized for the claimed domain. DKIM signature could not be validated against the sender's public key.</div>
+          <div class="authrow"><span>SPF</span><span id="spf" class="badge"></span></div>
+          <div class="authrow"><span>DKIM</span><span id="dkim" class="badge"></span></div>
+          <div class="authrow"><span>DMARC</span><span id="dmarc" class="badge"></span></div>
+          <div id="summary" class="warn"></div>
         </div>
         <div class="card">
           <b class="title">Message Metadata</b>
-          <div class="metarow"><span class="k">From</span><span class="v">security-update@paypaI-support.com</span></div>
-          <div class="metarow"><span class="k">Return-Path</span><span class="v">bounce@mkt-relay04.net</span></div>
-          <div class="metarow"><span class="k">Reply-To</span><span class="v">reply@paypaI-support.com</span></div>
-          <div class="metarow"><span class="k">Message-ID</span><span class="v">&lt;a12f9-2291@mkt-relay04.net&gt;</span></div>
-          <div class="metarow"><span class="k">Sending IP</span><span class="v">185.212.44.91</span></div>
+          <div class="metarow"><span class="k">From</span><span id="m-from" class="v"></span></div>
+          <div class="metarow"><span class="k">To</span><span id="m-to" class="v"></span></div>
+          <div class="metarow"><span class="k">Subject</span><span id="m-subject" class="v"></span></div>
+          <div class="metarow"><span class="k">Return-Path</span><span id="m-return" class="v"></span></div>
+          <div class="metarow"><span class="k">Reply-To</span><span id="m-reply" class="v"></span></div>
+          <div class="metarow"><span class="k">Message-ID</span><span id="m-id" class="v"></span></div>
+          <div class="metarow"><span class="k">Sending IP</span><span id="m-ip" class="v"></span></div>
         </div>
       </div>
 
       <div class="card">
         <b class="title">Relay Path</b>
         <div class="relay">
-          <div class="relaynode">Sender — <span class="mono">mkt-relay04.net</span></div>
+          <div class="relaynode">Sender — <span id="r-sender" class="mono"></span></div>
           <div class="arrow">↓</div>
-          <div class="relaynode bad">Mail Server — <span class="mono">185.212.44.91</span> (unauthorized for claimed domain)</div>
+          <div id="r-mail-box" class="relaynode">Mail Server — <span id="r-mail" class="mono"></span> <span id="r-mail-note"></span></div>
           <div class="arrow">↓</div>
-          <div class="relaynode">Intermediate Server — <span class="mono">edge-mx3.transithost.net</span></div>
+          <div class="relaynode">Intermediate Server — <span id="r-mid" class="mono"></span></div>
           <div class="arrow">↓</div>
-          <div class="relaynode">Destination Server — <span class="mono">mx.company-inbox.com</span></div>
+          <div class="relaynode">Destination Server — <span id="r-dest" class="mono"></span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-</body>
-  <script>
-function loadHeaderSample(type) {
-  if (type === 'phish') {
-    alert('Phishing sample loaded');
-  } else if (type === 'safe') {
-    alert('Safe example loaded');
-  }
+
+<script>
+// Built-in samples (same content as the Detection page samples)
+const SAMPLES = {
+  phish: {sender:'security-update@paypaI-support.com', recipient:'you@company.com', subject:'Urgent: Your account requires verification', score:88},
+  safe:  {sender:'billing@stripe.com', recipient:'you@company.com', subject:'Your October invoice is ready', score:8}
+};
+
+function $(id){ return document.getElementById(id); }
+
+function hash(str){
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) >>> 0;
+  return h;
 }
+
+function fakeIp(seed, failed){
+  const h = hash(seed);
+  const first = failed ? [185, 45, 91, 194][h % 4] : [17, 52, 104, 140][h % 4];
+  return first + '.' + ((h >> 4) % 200 + 20) + '.' + ((h >> 12) % 200 + 20) + '.' + ((h >> 20) % 200 + 10);
+}
+
+function setBadge(id, result){
+  const el = $(id);
+  el.textContent = result.toUpperCase();
+  el.className = 'badge ' + (result === 'pass' ? 'b-pass' : 'b-fail');
+}
+
+// Same threshold the Detection page uses: score above 50 = authentication failure
+function render(email){
+  const score  = Number(email.score) || 0;
+  const failed = score > 50;
+  const sender = email.sender || 'unknown@unknown.invalid';
+  const domain = sender.split('@')[1] || 'unknown.invalid';
+  const recipient = email.recipient || 'you@company.com';
+  const destDomain = recipient.split('@')[1] || 'company-inbox.com';
+  const relayDomain = failed ? 'mkt-relay04.net' : domain;
+  const ip = fakeIp(domain, failed);
+  const id = (hash(sender + (email.subject || '')) % 90000 + 10000).toString(16);
+
+  const result = failed ? 'fail' : 'pass';
+  setBadge('spf', result);
+  setBadge('dkim', result);
+  setBadge('dmarc', result);
+
+  const summary = $('summary');
+  summary.className = 'warn' + (failed ? '' : ' ok');
+  summary.textContent = failed
+    ? 'Authentication Summary: SPF failed because the sending IP is not authorized for the claimed domain. DKIM signature could not be validated against the sender\'s public key. DMARC failed because neither check aligned with the From domain.'
+    : 'Authentication Summary: SPF passed because the sending IP is authorized for the sender domain. DKIM signature was validated against the domain\'s public key. DMARC passed with both checks aligned to the From domain.';
+
+  $('m-from').textContent = sender;
+  $('m-to').textContent = recipient;
+  $('m-subject').textContent = email.subject || '(no subject)';
+  $('m-return').textContent = 'bounce@' + relayDomain;
+  $('m-reply').textContent = sender;
+  $('m-id').textContent = '<' + id + '-' + (hash(domain) % 9000 + 1000) + '@' + relayDomain + '>';
+  $('m-ip').textContent = ip;
+
+  $('r-sender').textContent = relayDomain;
+  $('r-mail').textContent = ip;
+  $('r-mail-note').textContent = failed ? '(unauthorized for claimed domain)' : '(authorized for sender domain)';
+  $('r-mail-box').className = 'relaynode ' + (failed ? 'bad' : 'good');
+  $('r-mid').textContent = failed ? 'edge-mx3.transithost.net' : 'out-mx2.' + domain;
+  $('r-dest').textContent = 'mx.' + destDomain;
+}
+
+function loadHeaderSample(type){
+  const s = SAMPLES[type];
+  if (!s) return;
+  render(s);
+  $('btn-phish').classList.toggle('selected', type === 'phish');
+  $('btn-safe').classList.toggle('selected', type === 'safe');
+}
+
+// On load: use the email sent from the Detection page, otherwise show the phishing sample
+(function init(){
+  const p = new URLSearchParams(window.location.search);
+  if (p.has('sender') && p.get('sender')) {
+    render({
+      sender: p.get('sender'),
+      recipient: p.get('recipient'),
+      subject: p.get('subject'),
+      score: p.get('score')
+    });
+  } else {
+    loadHeaderSample('phish');
+  }
+})();
 </script>
 </body>
-</html>
 </html>
