@@ -2,103 +2,143 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MailAuth – Forensic Chain</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MailAuth — Forensic Chain</title>
 <style>
-:root {
-  --bg: #070b16;
-  --panel: #0b1120;
-  --sidebar: #0a0f1c;
-  --border: #1a2338;
-  --text: #e6ebf5;
-  --muted: #7d8bad;
-  --teal: #22b8cf;
-  --teal-bg: #0d2a33;
-  --sans: "Inter", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, monospace;
+:root{--bg:#0a1120;--panel:#111b2e;--panel2:#0d1626;--border:#22314d;--text:#e7edf7;--muted:#8a99b8;--cyan:#38bdf8;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--text)}
+body{padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+.app{display:flex;height:100%}
+.sidebar{width:210px;flex:none;background:var(--panel2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:18px 12px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;margin-bottom:12px}
+.brand .icon{width:32px;height:32px;border-radius:8px;background:var(--panel);border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--cyan)}
+.brand b{font-size:14.5px}
+.brand small{display:block;color:var(--muted);font-size:10px}
+.nav{display:flex;flex-direction:column;gap:2px;flex:1}
+.nav button{display:flex;align-items:center;gap:10px;padding:9px 12px;background:none;border:none;color:var(--muted);border-radius:10px;cursor:pointer;font-size:13.5px;text-align:left;width:100%}
+.nav button:hover{background:#16223a;color:var(--text)}
+.nav button.active{color:var(--cyan);font-weight:600}
+.nav .bottom{margin-top:auto;padding-top:8px}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{display:flex;align-items:center;gap:16px;padding:16px 24px}
+.topbar input{flex:1;max-width:380px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-size:13px}
+.topbar .spacer{flex:1}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#04202b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.content{flex:1;overflow-y:auto;padding:0 24px 24px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:13.5px;margin:0 0 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+.card b.title{display:block;font-size:15px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td{padding:8px 4px;border-bottom:1px solid var(--border)}
+td.time{color:var(--muted);width:90px}
+.block{border:1px solid var(--border);border-left:4px solid var(--cyan);border-radius:10px;padding:12px 14px;margin-bottom:10px;font-size:12.5px}
+.block .h{font-weight:600;font-size:13px;margin-bottom:4px}
+.mono{font-family:ui-monospace,Menlo,monospace;color:var(--muted);word-break:break-all}
+.tag{font-size:11px;color:var(--muted)}
+.btn{background:var(--cyan);color:#04202b;border:none;padding:11px 18px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;margin-top:18px}
+.btn.ghost{background:none;border:1px solid var(--border);color:var(--text)}
+#reportModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:50}
+#reportModal.show{display:flex}
+.reportbox{background:var(--panel);border-radius:14px;max-width:600px;width:92%;max-height:85vh;overflow-y:auto;padding:24px;border:1px solid var(--border)}
+@media print{.sidebar,.topbar,.no-print{display:none!important}.content{overflow:visible}}
+@media(max-width:900px){.app{flex-direction:column}.sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:10px}.nav{flex-direction:row}.nav .bottom{margin:0 0 0 auto;padding:0;display:flex}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><div class="icon">✉️</div><div><b>MailAuth</b><small>Investigate · Authenticate · Trace</small></div></div>
+    <div class="nav">
+      <button>▦ Overview</button>
+      <button>🔍 Detection</button>
+      <button>▤ Header Analysis</button>
+      <button>📍 GeoLocation</button>
+      <button>🕸️ Attribution</button>
+      <button class="active">☰ Forensic Chain</button>
+      <div class="bottom">
+        <button>⚙ Settings</button>
+        <button>? Help</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <input placeholder="Search investigations, domains, IPs...">
+      <div class="spacer"></div>
+      <span>🔔</span>
+      <div class="avatar">SA</div>
+    </div>
+    <div class="content">
+      <h1>Forensic Chain</h1>
+      <p class="sub">Chronological, tamper-evident record of the investigation.</p>
+
+      <div class="grid2">
+        <div class="card">
+          <b class="title">Timeline</b>
+          <table id="timelineTable"></table>
+        </div>
+        <div class="card">
+          <b class="title">Evidence Chain</b>
+          <div id="chainBlocks"></div>
+        </div>
+      </div>
+
+      <button class="btn no-print" onclick="openReport()">Generate Evidence Report</button>
+    </div>
+  </div>
+</div>
+
+<div id="reportModal" class="no-print"><div class="reportbox">
+  <h1>MailAuth — Email Threat Investigation Report</h1>
+  <div id="reportBody" style="font-size:13px;line-height:1.7"></div>
+  <div style="display:flex;gap:10px;margin-top:16px" class="no-print">
+    <button class="btn" onclick="window.print()">Print / Save PDF</button>
+    <button class="btn ghost" onclick="document.getElementById('reportModal').classList.remove('show')">Close</button>
+  </div>
+</div></div>
+
+<script>
+const events=[
+  ['12:41:02','Email submitted'],
+  ['12:41:04','Header extracted'],
+  ['12:41:06','SPF/DKIM/DMARC analyzed'],
+  ['12:41:08','URL and IP indicators extracted'],
+  ['12:41:10','Threat score generated'],
+  ['12:41:12','Evidence report created'],
+];
+const timelineTable=document.getElementById('timelineTable');
+events.forEach(([time,label])=>{
+  timelineTable.innerHTML+='<tr><td class="time">'+time+'</td><td>'+label+'</td></tr>';
+});
+
+function buildChain(){
+  const el=document.getElementById('chainBlocks'); el.innerHTML='';
+  let prev='0000000000000000';
+  events.forEach((e,i)=>{
+    const hash=Math.random().toString(16).slice(2,18);
+    el.innerHTML+='<div class="block"><div class="h">Evidence #'+String(i+1).padStart(3,'0')+' — '+e[1]+'</div><div class="mono">Hash: '+hash+'</div><div class="mono">Prev: '+prev+'</div><div class="tag">Evidence ID: EVID-'+(1000+i)+'</div></div>';
+    prev=hash;
+  });
 }
+buildChain();
 
-* {
-  box-sizing: border-box;
-  margin: 0;
+function openReport(){
+  const now=new Date().toLocaleString();
+  document.getElementById('reportBody').innerHTML=
+    '<p><b>Investigation ID:</b> INV-'+Math.floor(Math.random()*90000+10000)+'</p>'+
+    '<p><b>Date/Time:</b> '+now+'</p>'+
+    '<p><b>Risk Score:</b> 92/100 (High Risk)</p>'+
+    '<p><b>Threat Classification:</b> Credential Phishing</p>'+
+    '<hr><p><b>Sender:</b> security-update@paypaI-support.com<br><b>Sending IP:</b> 185.212.44.91</p>'+
+    '<p><b>Authentication:</b> SPF FAIL, DKIM FAIL, DMARC FAIL</p>'+
+    '<p><b>GeoLocation:</b> Singapore (approx.), AS64512 — EXAMPLE-NET</p>'+
+    '<p><b>Evidence Chain:</b> '+events.length+' tamper-evident evidence blocks generated</p>'+
+    '<hr><p style="color:var(--muted);font-size:12px">Generated by MailAuth — Email Threat Intelligence Platform</p>';
+  document.getElementById('reportModal').classList.add('show');
 }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 14px;
-}
-
-.app {
-  display: grid;
-  grid-template-columns: 210px 1fr;
-  min-height: 100vh;
-}
-
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar {
-  background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  padding: 28px 10px 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* MailAuth Logo */
-
-.brand {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 0 8px 26px;
-}
-
-.brand-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: var(--teal-bg);
-  border: 1px solid var(--teal);
-  display: grid;
-  place-items: center;
-  color: var(--teal);
-  flex: none;
-}
-
-.brand-icon svg {
-  width: 17px;
-  height: 17px;
-}
-
-.brand b {
-  font-size: 15px;
-  display: block;
-}
-
-.brand small {
-  color: var(--muted);
-  font-size: 10px;
-  line-height: 1.2;
-  display: block;
-}
-
-/* Navigation */
-
-.sidebar nav {
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  margin-bottom:
+</script>
+</body>
+</html>
